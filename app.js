@@ -191,6 +191,7 @@
     setDeadline(FULL);
     state = 'counting';
     terminal.classList.remove('alarm');
+    log.querySelectorAll('.blink').forEach((line) => line.classList.remove('blink'));
     lastSecond = FULL;
     showTime(FULL);
     beep(1320, 0.08);
