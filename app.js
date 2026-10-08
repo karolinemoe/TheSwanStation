@@ -119,7 +119,7 @@
 
   function execute(input) {
     const cmd = normalize(input);
-    print('>: ' + input);
+    print('>: ' + input.replace(/\S/g, '*')); // mask the input, so the code isn't left on screen
     if (!cmd) return;
 
     if (cmd !== CODE) {
@@ -242,10 +242,9 @@
   // ---------- Boot ----------
 
   const stored = persist ? Number(localStorage.getItem(STORAGE_KEY)) : 0;
-  if (stored && stored > Date.now()) {
-    deadline = stored;
-  } else if (stored) {
-    deadline = stored; // already expired: will show failure
+  // ignore a saved deadline further away than FULL (e.g. saved before FULL was shortened)
+  if (stored && stored - Date.now() <= FULL * 1000) {
+    deadline = stored; // if already expired, this will show failure
   } else {
     setDeadline(startParam ?? FULL);
   }
