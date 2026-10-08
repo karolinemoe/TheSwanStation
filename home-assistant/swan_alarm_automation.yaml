@@ -1,0 +1,73 @@
+# Home Assistant automation for the Swan station simulator.
+# Settings > Automations > Create automation > ⋮ > Edit in YAML, paste this,
+# and replace light.living_room with your Hue light's entity id (two places).
+#
+# "alarm" webhook: snapshot the light, then blink it red.
+# "reset" webhook: stop blinking and restore the light to how it was.
+# mode: restart lets the reset webhook cancel the blinking loop.
+
+alias: Swan station alarm
+description: Blink a Hue light red when the Swan countdown hits 4:00
+mode: restart
+triggers:
+  - trigger: webhook
+    webhook_id: swan-alarm-66afc52376569bc0
+    allowed_methods: [POST]
+    local_only: true
+    id: alarm
+  - trigger: webhook
+    webhook_id: swan-reset-afe5194616df7895
+    allowed_methods: [POST]
+    local_only: true
+    id: reset
+variables:
+  swan_light: light.living_room
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: alarm
+        sequence:
+          # Only snapshot once, so a page reload mid-alarm doesn't save the red state
+          - if:
+              - condition: template
+                value_template: "{{ states.scene.swan_before_alarm is none }}"
+            then:
+              - action: scene.create
+                data:
+                  scene_id: swan_before_alarm
+                  snapshot_entities:
+                    - light.living_room
+          - repeat:
+              count: 600 # safety cap, about 15 minutes
+              sequence:
+                - action: light.turn_on
+                  target:
+                    entity_id: "{{ swan_light }}"
+                  data:
+                    rgb_color: [255, 0, 0]
+                    brightness: 255
+                    transition: 0
+                - delay:
+                    milliseconds: 700
+                - action: light.turn_on
+                  target:
+                    entity_id: "{{ swan_light }}"
+                  data:
+                    rgb_color: [255, 0, 0]
+                    brightness: 5
+                    transition: 0
+                - delay:
+                    milliseconds: 700
+      - conditions:
+          - condition: trigger
+            id: reset
+          - condition: template
+            value_template: "{{ states.scene.swan_before_alarm is not none }}"
+        sequence:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.swan_before_alarm
+          - action: scene.delete
+            target:
+              entity_id: scene.swan_before_alarm
