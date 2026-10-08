@@ -1,7 +1,7 @@
 (() => {
   'use strict';
 
-  const FULL = 108 * 60;      // 108 minutes
+  const FULL = 60 * 60;       // 60 minutes
   const WINDOW = 4 * 60;      // code may be entered from 4:00
   const ALARM = 60;           // continuous alarm from 1:00
   const CODE = '4 8 15 16 23 42';
@@ -194,7 +194,7 @@
     lastSecond = FULL;
     showTime(FULL);
     beep(1320, 0.08);
-    print('CODE ACCEPTED. TIMER RESET TO 108:00.');
+    print('CODE ACCEPTED. TIMER RESET TO 60:00.');
   }
 
   function tick() {
@@ -254,7 +254,7 @@
     'DHARMA INITIATIVE',
     'STATION 3: THE SWAN',
     '',
-    'EVERY 108 MINUTES THE CODE MUST BE ENTERED.',
+    'EVERY 60 MINUTES THE CODE MUST BE ENTERED.',
     'CLICK OR PRESS ANY KEY TO ENABLE SOUND.',
     '',
   ].forEach((l) => print(l));

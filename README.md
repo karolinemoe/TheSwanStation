@@ -2,11 +2,11 @@
 
 A browser simulator of the Swan station countdown from *Lost*.
 
-- The flip clock counts down from **108:00**. The black cards show minutes and the white cards show seconds.
+- The flip clock counts down from **60:00**. The black cards show minutes and the white cards show seconds.
 - At **4:00** the execution window opens and the alarm starts beeping.
 - At **1:00** the alarm becomes continuous.
 - At **0:00** the cards flip to hieroglyphs (system failure).
-- To reset to 108:00, type `4 8 15 16 23 42` at the `>:` prompt and press **Enter**.
+- To reset to 60:00, type `4 8 15 16 23 42` at the `>:` prompt and press **Enter**.
 
 ## Run
 
